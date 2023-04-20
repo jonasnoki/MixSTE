@@ -28,6 +28,8 @@ def parse_args():
                         help='create a checkpoint every N epochs')
     parser.add_argument('-r', '--resume', default='', type=str, metavar='FILENAME',
                         help='checkpoint to resume (file name)')
+    parser.add_argument('--finetune', default='', type=str, metavar='FILENAME',
+                        help='checkpoint to finetune (file name)')
     parser.add_argument('--nolog', action='store_true', help='forbiden log function')
     parser.add_argument('--evaluate', default='', type=str, metavar='FILENAME', help='checkpoint to evaluate (file name)')
     parser.add_argument('--render', action='store_true', help='visualize a particular video')
@@ -96,7 +98,15 @@ def parse_args():
     parser.add_argument('-lcs', '--linear_channel_size', type=int, default=1024, metavar='N', help='channel size of the LinearModel')
     parser.add_argument('-depth', type=int, default=4, metavar='N', help='nums of blocks of the LinearModel')
     parser.add_argument('-ldg', '--lr_decay_gap', type=float, default=10000, metavar='N', help='channel size of the LinearModel')
-    
+
+    # CSV export
+    parser.add_argument('--csv-export', action='store_true', help='export predictions of all subjects in the custom dataset to csv files')
+    parser.add_argument('--csv-output', type=str, metavar='PATH', help='output path for csv predicitons')
+    parser.add_argument('--trajectory', action='store_true', help='if trajectory should be added')
+
+    parser.add_argument('--leave-one-subject-out', action='store_true', help='leave one subject out for evaluation',
+                        default=False)
+
     parser.set_defaults(bone_length_term=True)
     parser.set_defaults(data_augmentation=True)
     parser.set_defaults(test_time_augmentation=True)

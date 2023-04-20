@@ -395,7 +395,7 @@ class attn_pooling(nn.Module):
         return x
 
 class  MixSTE2(nn.Module):
-    def __init__(self, num_frame=9, num_joints=17, in_chans=2, embed_dim_ratio=32, depth=4,
+    def __init__(self, num_frame=9, num_joints=17, num_joints_out=17, in_chans=2, embed_dim_ratio=32, depth=4,
                  num_heads=8, mlp_ratio=2., qkv_bias=True, qk_scale=None,
                  drop_rate=0., attn_drop_rate=0., drop_path_rate=0.2,  norm_layer=None):
         """    ##########hybrid_backbone=None, representation_size=None,
@@ -418,7 +418,7 @@ class  MixSTE2(nn.Module):
 
         norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
         embed_dim = embed_dim_ratio   #### temporal embed_dim is num_joints * spatial embedding dim ratio
-        out_dim = 3     #### output dimension is num_joints * 3
+        out_dim = num_joints_out * 3     #### output dimension is num_joints * 3
 
         ### spatial patch embedding
         self.Spatial_patch_to_embedding = nn.Linear(in_chans, embed_dim_ratio)
