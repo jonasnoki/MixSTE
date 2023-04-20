@@ -267,9 +267,10 @@ def run_training_and_evaluation():
 
     # make model parallel
     if torch.cuda.is_available():
-        model_pos = nn.DataParallel(model_pos)
+        from torch.nn.parallel import DistributedDataParallel as DDP
+        model_pos = DDP(model_pos)
         model_pos = model_pos.cuda()
-        model_pos_train = nn.DataParallel(model_pos_train)
+        model_pos_train = DDP(model_pos_train)
         model_pos_train = model_pos_train.cuda()
 
 
