@@ -51,20 +51,6 @@ args = parse_args()
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
-def setup(world_size):
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '12355'
-
-    # initialize the process group
-    dist.init_process_group("gloo", world_size=world_size)
-
-def cleanup():
-    dist.destroy_process_group()
-
-
-world_size = torch.cuda.device_count()
-
-setup(world_size)
 
 if args.evaluate != '':
     description = "Evaluate!"
@@ -283,10 +269,7 @@ def run_training_and_evaluation():
 
     # make model parallel
     if torch.cuda.is_available():
-        from torch.nn.parallel import DistributedDataParallel as DDP
-        model_pos = DDP(model_pos)
         model_pos = model_pos.cuda()
-        model_pos_train = DDP(model_pos_train)
         model_pos_train = model_pos_train.cuda()
 
 
