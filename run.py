@@ -34,6 +34,8 @@ from common.utils import *
 from common.logging import Logger
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
+import torch.distributed as dist
+
 
 #cudnn.benchmark = True       
 torch.backends.cudnn.deterministic = True
@@ -49,6 +51,20 @@ args = parse_args()
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
+def setup(world_size):
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '12355'
+
+    # initialize the process group
+    dist.init_process_group("gloo", world_size=world_size)
+
+def cleanup():
+    dist.destroy_process_group()
+
+
+world_size = torch.cuda.device_count()
+
+setup(world_size)
 
 if args.evaluate != '':
     description = "Evaluate!"
