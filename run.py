@@ -244,12 +244,7 @@ def run_training_and_evaluation():
     if not args.nolog:
         writer.add_text(args.log+'_'+TIMESTAMP + '/Trainable parameter count', str(model_params/1000000) + ' Million')
 
-    # make model parallel
-    if torch.cuda.is_available():
-        model_pos = nn.DataParallel(model_pos)
-        model_pos = model_pos.cuda()
-        model_pos_train = nn.DataParallel(model_pos_train)
-        model_pos_train = model_pos_train.cuda()
+
 
     if args.resume or args.evaluate or args.finetune:
         chk_filename = os.path.join(args.checkpoint,
@@ -269,6 +264,13 @@ def run_training_and_evaluation():
 
         model_pos_train.load_state_dict(state_dict, strict=False)
         model_pos.load_state_dict(state_dict, strict=False)
+
+    # make model parallel
+    if torch.cuda.is_available():
+        model_pos = nn.DataParallel(model_pos)
+        model_pos = model_pos.cuda()
+        model_pos_train = nn.DataParallel(model_pos_train)
+        model_pos_train = model_pos_train.cuda()
 
 
     test_generator = UnchunkedGenerator_Seq(cameras_valid, poses_valid, poses_valid_2d,
