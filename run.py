@@ -263,7 +263,7 @@ def run_training_and_evaluation():
         print('This model was trained for {} epochs'.format(checkpoint['epoch']))
         if dataset.skeleton().num_joints() != 17:
             # Reinitialize the last layer for different number of joints
-            head_layer = model_pos.head[1]
+            head_layer = dict(model_pos.named_modules())["head.1"]
             state_dict["module.head.1.weight"] = head_layer.weight.data
             state_dict["module.head.1.bias"] = head_layer.bias.data
 
